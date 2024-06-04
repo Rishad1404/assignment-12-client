@@ -1,12 +1,56 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../../public/logo.png'
+import toast from 'react-hot-toast';
+import { useContext, useEffect} from 'react';
+import { AuthContext } from '../../Provider/AuthProvider';
 const Login = () => {
+    const { signIn, googleLogin,user,loading } = useContext(AuthContext)
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        if(user){
+            navigate('/')
+        }
+
+    },[navigate,user])
+
+    const handleLogin = e => {
+        e.preventDefault();
+        const form = new FormData(e.currentTarget)
+        const email = form.get('email')
+        const password = form.get('password')
+        console.log(email, password)
+
+        signIn(email, password)
+            .then(result => {
+                console.log(result.user)
+                toast.success('Login Successful')
+                navigate(location.state = '/')
+            })
+            .catch(error => {
+                toast.error("Incorrect Information")
+                console.log(error)
+            })
+    }
+    const handleGoogleLogin = e => {
+        e.preventDefault();
+        googleLogin()
+            .then(result => {
+                console.log(result.user)
+                toast.success('Login Successful')
+                navigate(location.state = '/')
+            })
+            .catch(error => {
+                console.log(error)
+                toast.error("Login Unsuccessful")
+            })
+    }
+    if(user||loading) return
     return (
         <div>
             <div className="container mx-auto mb-20 my-20">
-
                 <div className='flex justify-center items-center'>
-                    <div className='flex w-full max-w-sm mx-auto overflow-hidden bg-base-200 rounded-lg shadow-lg  lg:max-w-4xl'>
+                    <div className='flex w-full max-w-sm mx-auto overflow-hidden bg-base-200 rounded-lg shadow-lg lg:h-[600px] lg:max-w-7xl'>
                         <div
                             className='hidden bg-cover bg-center lg:block lg:w-1/2'
                             style={{
@@ -49,7 +93,7 @@ const Login = () => {
                                     </svg>
                                 </div>
 
-                                <button className='w-5/6 px-4 py-3 font-bold text-center'>
+                                <button onClick={handleGoogleLogin} className='w-5/6 px-4 py-4 font-bold text-center'>
                                     Sign in with Google
                                 </button>
                             </div>
@@ -57,13 +101,13 @@ const Login = () => {
                             <div className='flex items-center justify-between mt-4'>
                                 <span className='w-1/5 border-b  lg:w-1/4'></span>
 
-                                <div className='text-xs text-center text-gray-500 uppercase  hover:underline'>
+                                <div className='text-xs text-center text-gray-00 uppercase  hover:underline'>
                                     or login with email
                                 </div>
 
                                 <span className='w-1/5 border-b dark:border-gray-400 lg:w-1/4'></span>
                             </div>
-                            <form>
+                            <form onSubmit={handleLogin}>
                                 <div className='mt-4'>
                                     <label
                                         className='block mb-2 text-sm font-medium text-gray-600 '
@@ -76,7 +120,7 @@ const Login = () => {
                                         autoComplete='email'
                                         name='email'
                                         placeholder="Email"
-                                        className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg  focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
+                                        className='block w-full px-4 py-4 text-gray-700 bg-white border rounded-lg  focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
                                         type='email'
                                     />
                                 </div>
@@ -91,7 +135,7 @@ const Login = () => {
                                                 name="password"
                                                 id="password"
                                                 placeholder="Password"
-                                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:text-gray-300 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300" required />
+                                                className="block w-full px-4 py-4 text-gray-700 bg-white border rounded-lg dark:text-gray-300 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300" required />
                                             
                                         </div>
                                     </div>
@@ -101,7 +145,7 @@ const Login = () => {
                                 <div className='mt-6'>
                                     <button
                                         type='submit'
-                                        className='w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50'
+                                        className='w-full px-6 py-4 text-lg font-bold tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50'
                                     >
                                         Sign In
                                     </button>
@@ -113,7 +157,7 @@ const Login = () => {
 
                                 <Link
                                     to='/registration'
-                                    className='text-xs text-gray-500 uppercase  hover:underline'
+                                    className='text-xs font-bold text-gray-500 uppercase  hover:underline'
                                 >
                                     or sign up
                                 </Link>

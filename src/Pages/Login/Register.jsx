@@ -1,12 +1,27 @@
-import { Toaster } from "react-hot-toast";
-import { Link } from "react-router-dom";
-import logo from '../../../public/logo.png'
 
+import { useForm } from 'react-hook-form';
+import logo from '../../../public/logo.png'
+import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../Provider/AuthProvider';
 const Register = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm()
+    const { createUser, } = useContext(AuthContext)
+
+
+    const onSubmit=data=>{
+        console.log(data)
+        createUser(data.email, data.password)
+        .then(result=>{
+            const loggedUser=result.user;
+            console.log(loggedUser)
+        })
+    }
+    
     return (
         <div>
-            <div className='flex justify-center items-center min-h-[calc(100vh-306px)] my-5'>
-                <div className='flex w-full max-w-sm mx-auto overflow-hidden bg-base-200 rounded-lg shadow-lg  lg:max-w-4xl '>
+            <div className='flex justify-center items-center min-h-[calc(100vh-306px)] my-20'>
+                <div className='flex w-full max-w-sm mx-auto overflow-hidden bg-base-200 rounded-lg shadow-lg lg:h-[800px]  lg:max-w-7xl '>
                     <div className='w-full px-6 py-8 md:px-8 lg:w-1/2'>
                         <div className='flex justify-center mx-auto'>
                             <img
@@ -42,7 +57,7 @@ const Register = () => {
                                 </svg>
                             </div>
 
-                            <span className='w-5/6 px-4 py-3 font-bold text-center dark:text-blue'>
+                            <span className='w-5/6 px-4 py-4 font-bold text-center dark:text-blue'>
                                 Sign in with Google
                             </span>
                         </div>
@@ -56,8 +71,8 @@ const Register = () => {
 
                             <span className='w-1/5 border-b dark:border-gray-400 lg:w-1/4'></span>
                         </div>
-                        <form>
-                            <div className='mt-4'>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <div className='mt-4 form-control'>
                                 <label
                                     className='block mb-2 text-sm font-medium dark:text-blue '
                                     htmlFor='name'
@@ -66,13 +81,15 @@ const Register = () => {
                                 </label>
                                 <input
                                     id='name'
+                                    {...register("name", { required: true })}
                                     autoComplete='name'
                                     name='name'
-                                    className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
+                                    className='block w-full px-4 py-4 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
                                     type='text'
                                 />
+                                {errors.name && <span className="text-red-600">Name is Required</span>}
                             </div>
-                            <div className='mt-4'>
+                            <div className='mt-4 form-control'>
                                 <label
                                     className='block mb-2 text-sm font-medium dark:text-blue'
                                     htmlFor='photo'
@@ -81,13 +98,14 @@ const Register = () => {
                                 </label>
                                 <input
                                     id='photo'
+                                    {...register("photoURL")}
                                     autoComplete='photo'
-                                    name='photo'
-                                    className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
+                                    name='photoURL'
+                                    className='block w-full px-4 py-4 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
                                     type='text'
                                 />
                             </div>
-                            <div className='mt-4'>
+                            <div className='mt-4 form-control'>
                                 <label
                                     className='block mb-2 text-sm font-medium dark:text-blue'
                                     htmlFor='LoggingEmailAddress'
@@ -97,38 +115,40 @@ const Register = () => {
                                 <input
                                     id='LoggingEmailAddress'
                                     autoComplete='email'
+                                    {...register("email", { required: true })}
                                     name='email'
-                                    className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
+                                    className='block w-full px-4 py-4 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
                                     type='email'
                                 />
+                                {errors.email && <span className="text-red-600">Email is Required</span>}
                             </div>
 
-                            <div className='mt-4'>
+                            <div className='mt-4 form-control'>
                                 <div className="space-y-1">
                                     <label htmlFor="password" className="block mb-2 text-sm font-medium  dark:text-blue">Password</label>
 
                                     <div className=" dark:text-gray-600 relative">
                                         <input
-                                            type= "password"
+                                            type="password"
                                             name="password"
+                                            {...register("password", { required: true, minLength: 6, maxLength: 20 })}
                                             id="password"
                                             placeholder="Password"
-                                            className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:text-gray-300 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300" required />
-                                    
+                                            className="block w-full px-4 py-4 text-gray-700 bg-white border rounded-lg dark:text-gray-300 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300" required />
+
                                     </div>
                                 </div>
 
 
                             </div>
-                            <div className='mt-6'>
+                            <div className='mt-6 form-control'>
                                 <button
                                     type='submit'
-                                    className='w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50'
+                                    className='w-full px-6 py-5 text-lg font-bold tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50'
                                 >
                                     Sign Up
                                 </button>
-                                <Toaster position="top-right"
-                                    reverseOrder={false} />
+                                
                             </div>
                         </form>
 
