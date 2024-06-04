@@ -1,8 +1,14 @@
+import Navbar from "../Shared/Navbar";
+import Banner from "./Banner";
+import Tags from "./Tags";
+
 
 const Home = () => {
     return (
         <div>
-            <h2>This is Home</h2>
+            <Navbar></Navbar>
+            <Banner></Banner>
+            <Tags></Tags>
         </div>
     );
 };
