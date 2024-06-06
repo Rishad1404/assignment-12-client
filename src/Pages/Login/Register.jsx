@@ -1,12 +1,14 @@
 
 import { useForm } from 'react-hook-form';
 import logo from '../../../public/logo.png'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../Provider/AuthProvider';
+import toast from 'react-hot-toast';
 const Register = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm()
-    const { createUser, } = useContext(AuthContext)
+    const { register, handleSubmit,reset, formState: { errors } } = useForm()
+    const { createUser,updateUserProfile,googleSignIn } = useContext(AuthContext)
+    const navigate=useNavigate()
 
 
     const onSubmit=data=>{
@@ -15,7 +17,29 @@ const Register = () => {
         .then(result=>{
             const loggedUser=result.user;
             console.log(loggedUser)
+            updateUserProfile(data.name,data.photoURL)
+            .then(()=>{
+                console.log('user updated')
+                reset();
+                toast.success('Registration Successful')
+                navigate('/')
+
+            })
+            .catch(error=>console.log(error))
         })
+    }
+    const handleGoogleLogin = e => {
+        e.preventDefault();
+        googleSignIn()
+            .then(result => {
+                console.log(result.user)
+                toast.success('Login Successful')
+                navigate(location.state = '/')
+            })
+            .catch(error => {
+                console.log(error)
+                toast.error("Login Unsuccessful")
+            })
     }
     
     return (
@@ -57,7 +81,7 @@ const Register = () => {
                                 </svg>
                             </div>
 
-                            <span className='w-5/6 px-4 py-4 font-bold text-center dark:text-blue'>
+                            <span onClick={handleGoogleLogin} className='w-5/6 px-4 py-4 font-bold text-center dark:text-blue'>
                                 Sign in with Google
                             </span>
                         </div>

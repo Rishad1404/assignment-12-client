@@ -1,18 +1,15 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../../public/logo.png'
 import toast from 'react-hot-toast';
-import { useContext, useEffect} from 'react';
+import { useContext, } from 'react';
 import { AuthContext } from '../../Provider/AuthProvider';
 const Login = () => {
-    const { signIn, googleLogin,user,loading } = useContext(AuthContext)
+    const { signIn, googleSignIn,user,loading } = useContext(AuthContext)
     const navigate = useNavigate();
+    const location=useLocation();
 
-    useEffect(()=>{
-        if(user){
-            navigate('/')
-        }
+    const from=location.state?.from?.pathname || '/'
 
-    },[navigate,user])
 
     const handleLogin = e => {
         e.preventDefault();
@@ -25,7 +22,7 @@ const Login = () => {
             .then(result => {
                 console.log(result.user)
                 toast.success('Login Successful')
-                navigate(location.state = '/')
+                navigate(from,{replace:true});
             })
             .catch(error => {
                 toast.error("Incorrect Information")
@@ -34,7 +31,7 @@ const Login = () => {
     }
     const handleGoogleLogin = e => {
         e.preventDefault();
-        googleLogin()
+        googleSignIn()
             .then(result => {
                 console.log(result.user)
                 toast.success('Login Successful')
@@ -93,9 +90,9 @@ const Login = () => {
                                     </svg>
                                 </div>
 
-                                <button onClick={handleGoogleLogin} className='w-5/6 px-4 py-4 font-bold text-center'>
+                                <span onClick={handleGoogleLogin} className='w-5/6 px-4 py-4 font-bold text-center'>
                                     Sign in with Google
-                                </button>
+                                </span>
                             </div>
 
                             <div className='flex items-center justify-between mt-4'>
