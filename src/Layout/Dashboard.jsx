@@ -1,11 +1,16 @@
 import { CgProfile } from "react-icons/cg";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import { NavLink, Outlet } from "react-router-dom";
-import { FaHome, FaList, FaPhone } from "react-icons/fa";
+import { FaHome, FaList, FaPhone,FaAddressBook } from "react-icons/fa";
+import { TfiAnnouncement } from "react-icons/tfi";
 import useAuth from "../hooks/useAuth.jsx";
+import useAdmin from "../hooks/useAdmin.jsx";
 
 const Dashboard = () => {
-    const {user}=useAuth();
+    const { user } = useAuth();
+
+    // Admin related
+    const [isAdmin] = useAdmin();
     return (
         <div className="flex">
             <div className="w-96 min-h-screen bg-violet-300">
@@ -14,9 +19,19 @@ const Dashboard = () => {
                     <h2 className="lg:text-3xl font-bold p-1 text-violet-500">Welcome, {user.displayName}</h2>
                 </div>
                 <ul className="menu p-5">
-                    <li className="text-lg"><NavLink to='myProfile'><CgProfile className="text-xl" />My Profile</NavLink></li>
-                    <li className="text-lg"><NavLink to='addPost'><BiSolidCalendarPlus className="text-lg" />Add Post</NavLink></li>
-                    <li className="text-lg"><NavLink to='myPosts'><FaList className="text-lg" />My Posts</NavLink></li>
+                    {
+                        isAdmin ? <>
+                            <li className="text-lg"><NavLink to='/dashboard/adminProfile'><CgProfile className="text-xl" />Admin Profile</NavLink></li>
+                            <li className="text-lg"><NavLink to='/dashboard/manageUsers'><FaAddressBook className="text-lg" />Manage Users</NavLink></li>
+                            <li className="text-lg"><NavLink to='/dashboard/activities'><FaList className="text-lg" />Activities</NavLink></li>
+                            <li className="text-lg"><NavLink to='/dashboard/makeAnnouncement'><TfiAnnouncement className="text-lg" />Make Announcement</NavLink></li>
+                        </> :
+                            <>
+                                <li className="text-lg"><NavLink to='/dashboard/myProfile'><CgProfile className="text-xl" />My Profile</NavLink></li>
+                                <li className="text-lg"><NavLink to='/dashboard/addPost'><BiSolidCalendarPlus className="text-lg" />Add Post</NavLink></li>
+                                <li className="text-lg"><NavLink to='/dashboard/myPosts'><FaList className="text-lg" />My Posts</NavLink></li>
+                            </>
+                    }
 
 
 

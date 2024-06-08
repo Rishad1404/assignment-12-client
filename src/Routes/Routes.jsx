@@ -11,6 +11,9 @@ import Dashboard from "../Layout/Dashboard";
 import MyProfile from "../Pages/Dashboard/UserDashbooard/MyProfile";
 import AddPost from "../Pages/Dashboard/UserDashbooard/AddPost";
 import MyPosts from "../Pages/Dashboard/UserDashbooard/MyPosts";
+import ManageUsers from "../Pages/Dashboard/AdminDashBoard/ManageUsers";
+import Activities from "../Pages/Dashboard/AdminDashBoard/Activities";
+import MakeAnnouncement from "../Pages/Dashboard/AdminDashBoard/MakeAnnouncement";
 
   export const router = createBrowserRouter([
     {
@@ -40,6 +43,7 @@ import MyPosts from "../Pages/Dashboard/UserDashbooard/MyPosts";
       path:'dashboard',
       element:<PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
       children:[
+        // User dashboard
         {
           path:'myProfile',
           element:<MyProfile></MyProfile>
@@ -51,7 +55,26 @@ import MyPosts from "../Pages/Dashboard/UserDashbooard/MyPosts";
         {
           path:'myPosts',
           element:<MyPosts></MyPosts>
+        },
+
+        // Admin Dashboard
+        {
+          path:'adminProfile',
+          element:<></>,
+        },
+        {
+          path:'manageUsers',
+          element:<ManageUsers></ManageUsers>
+        },
+        {
+          path:'activities',
+          element:<Activities></Activities>
+        },
+        {
+          path:'makeAnnouncement',
+          element:<MakeAnnouncement></MakeAnnouncement>
         }
+
       ]
     }
   ]);
