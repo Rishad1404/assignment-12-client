@@ -7,8 +7,9 @@ import { AuthContext } from '../../Provider/AuthProvider';
 import toast from 'react-hot-toast';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import SocialLogin from './SocialLogin';
+
 const Register = () => {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm()
+    const { register, handleSubmit, formState: { errors } } = useForm()
     const { createUser, updateUserProfile } = useContext(AuthContext)
     const navigate = useNavigate();
     const axiosPublic = useAxiosPublic();
@@ -25,16 +26,16 @@ const Register = () => {
                         const userInfo = {
                             name: data.name,
                             email: data.email,
+                            photo:data.photoURL,
                             badge: 'bronze',
                         }
                         axiosPublic.post('/users', userInfo)
                             .then(res => {
                                 if (res.data.insertedId) {
                                     console.log('user added to database')
-                                    reset();
                                     toast.success('Registration Successful')
-                                    navigate(location.state = '/')
                                 }
+                                navigate('/')
                             })
 
                     })
@@ -85,6 +86,7 @@ const Register = () => {
                                     name='name'
                                     className='block w-full px-4 py-4 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
                                     type='text'
+                                    placeholder='user name'
                                 />
                                 {errors.name && <span className="text-red-600">Name is Required</span>}
                             </div>
@@ -102,6 +104,7 @@ const Register = () => {
                                     name='photoURL'
                                     className='block w-full px-4 py-4 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
                                     type='text'
+                                    placeholder='photo URL'
                                 />
                             </div>
                             <div className='mt-4 form-control'>
@@ -118,6 +121,7 @@ const Register = () => {
                                     name='email'
                                     className='block w-full px-4 py-4 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
                                     type='email'
+                                    placeholder='email'
                                 />
                                 {errors.email && <span className="text-red-600">Email is Required</span>}
                             </div>

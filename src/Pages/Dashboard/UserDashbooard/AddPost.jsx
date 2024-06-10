@@ -44,7 +44,7 @@ const AddPost = () => {
             if(postRes.data.insertedId){
                 // Show sucess Popup
                 Swal.fire({
-                    position: "top-end",
+                    position: "center",
                     icon: "success",
                     title: `SuccessFully added post`,
                     showConfirmButton: false,

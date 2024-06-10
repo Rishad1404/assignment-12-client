@@ -14,6 +14,7 @@ import MyPosts from "../Pages/Dashboard/UserDashbooard/MyPosts";
 import ManageUsers from "../Pages/Dashboard/AdminDashBoard/ManageUsers";
 import Activities from "../Pages/Dashboard/AdminDashBoard/Activities";
 import MakeAnnouncement from "../Pages/Dashboard/AdminDashBoard/MakeAnnouncement";
+import PostDetails from "../Pages/PostDetails";
 
   export const router = createBrowserRouter([
     {
@@ -22,7 +23,9 @@ import MakeAnnouncement from "../Pages/Dashboard/AdminDashBoard/MakeAnnouncement
       children:[
         {
             path:'/',
-            element:<Home></Home>
+            element:<Home></Home>,
+            loader:()=>fetch('http://localhost:5000/postsCount')
+            
         },
         {
           path:'/login',
@@ -35,6 +38,10 @@ import MakeAnnouncement from "../Pages/Dashboard/AdminDashBoard/MakeAnnouncement
         {
           path:'/membership',
           element:<PrivateRoute><MemberShip></MemberShip></PrivateRoute>
+        },
+        {
+          path:'/posts/:id',
+          element:<PrivateRoute><PostDetails></PostDetails></PrivateRoute>
         }
 
       ]
