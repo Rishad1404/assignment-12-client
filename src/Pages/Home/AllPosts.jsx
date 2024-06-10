@@ -6,33 +6,38 @@ import { GoComment } from "react-icons/go";
 import { Link, useLoaderData } from "react-router-dom";
 import { useState } from "react";
 import '../Home/AllPosts.css'
+import { FaListAlt } from "react-icons/fa";
+import { useSearch } from "../../hooks/useSearch";
 
 const AllPosts = () => {
     const axiosPublic = useAxiosPublic();
+    const{search}=useSearch()
     const { count } = useLoaderData();
-    const [currentPage,setCurrentPage]=useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
+    // const [sort, setSort] = useState()
+
 
     const itemPerPage = 5;
     const numberOfPages = Math.ceil(count / itemPerPage);
 
     const pages = [...Array(numberOfPages).keys()];
 
-    const handlePreviousPage=()=>{
-        if(currentPage>0){
-            setCurrentPage(currentPage-1)
+    const handlePreviousPage = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1)
         }
     }
-    const handleNextPage=()=>{
-        if(currentPage<pages.length-1){
-            setCurrentPage(currentPage+1)
+    const handleNextPage = () => {
+        if (currentPage < pages.length - 1) {
+            setCurrentPage(currentPage + 1)
         }
     }
 
 
     const { data: posts = [], isLoading } = useQuery({
-        queryKey: ['posts',currentPage],
+        queryKey: ['posts', currentPage,itemPerPage,search],
         queryFn: async () => {
-            const res = await axiosPublic.get(`/posts?page=${currentPage}&size=${itemPerPage}`);
+            const res = await axiosPublic.get(`/posts?page=${currentPage}&size=${itemPerPage}&search=${search}`);
             return res.data
         }
     })
@@ -42,6 +47,9 @@ const AllPosts = () => {
     return (
         <div className="mb-10">
             <SectionTitle heading='Posts'></SectionTitle>
+            <div className="flex justify-center my-10">
+                <button className="btn bg-violet-200"><FaListAlt></FaListAlt> Sort by Popularity</button>
+            </div>
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {
                     posts.map(post => <div key={post._id} className="hover:scale-105 transition-transform">
@@ -78,13 +86,13 @@ const AllPosts = () => {
             <p>{currentPage}</p>
             <div className="pagination">
                 <button onClick={handlePreviousPage} className="btn">Previous</button>
-                    {   
-                    pages.map(page=> <button
+                {
+                    pages.map(page => <button
                         key={page}
-                        onClick={()=>setCurrentPage(page)}
-                        type="button" title="Page 1" className={currentPage===page ? 'selected' : undefined}>{page}</button>)                
-                   }
-                   <button onClick={handleNextPage} className="btn">Next</button>
+                        onClick={() => setCurrentPage(page)}
+                        type="button" title="Page 1" className={currentPage === page ? 'selected' : undefined}>{page}</button>)
+                }
+                <button onClick={handleNextPage} className="btn">Next</button>
             </div>
 
         </div>
