@@ -41,7 +41,7 @@ import PostDetails from "../Pages/PostDetails";
         },
         {
           path:'/posts/:id',
-          element:<PrivateRoute><PostDetails></PostDetails></PrivateRoute>
+          element:<PostDetails></PostDetails>
         }
 
       ]

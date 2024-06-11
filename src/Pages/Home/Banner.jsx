@@ -2,7 +2,7 @@
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useSearch } from "../../hooks/useSearch";
 
-const Banner = () => {
+const Banner = ({postsRef}) => {
 
     const {setSearch}=useSearch()
 
@@ -11,6 +11,9 @@ const Banner = () => {
         const text = e.target.search.value;
         setSearch(text)
         console.log(text)
+        if (postsRef.current) {
+            postsRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
 
     }
     return (
