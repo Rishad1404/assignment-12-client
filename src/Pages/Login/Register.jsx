@@ -1,4 +1,3 @@
-
 import { useForm } from 'react-hook-form';
 import logo from '../../../public/logo.png'
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,39 +7,52 @@ import toast from 'react-hot-toast';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import SocialLogin from './SocialLogin';
 
+const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`
+
 const Register = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm()
-    const { createUser, updateUserProfile } = useContext(AuthContext)
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { createUser, updateUserProfile } = useContext(AuthContext);
     const navigate = useNavigate();
     const axiosPublic = useAxiosPublic();
 
+    const onSubmit = async data => {
+        let imageUrl = '';
+        if (data.photo.length > 0) {
+            const formData = new FormData();
+            formData.append('image', data.photo[0]);
+            const res = await axiosPublic.post(image_hosting_api, formData, {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            });
+            imageUrl = res.data.data.display_url;
+        }
 
-    const onSubmit = data => {
         createUser(data.email, data.password)
             .then(result => {
                 const loggedUser = result.user;
-                console.log(loggedUser)
-                updateUserProfile(data.name, data.photoURL)
+                console.log(loggedUser);
+                updateUserProfile(data.name, imageUrl)
                     .then(() => {
-                        // create user entry in database
                         const userInfo = {
                             name: data.name,
                             email: data.email,
-                            photo:data.photoURL,
+                            photo: imageUrl,
                             badge: 'bronze',
                         }
                         axiosPublic.post('/users', userInfo)
                             .then(res => {
                                 if (res.data.insertedId) {
-                                    console.log('user added to database')
-                                    toast.success('Registration Successful')
+                                    console.log('user added to database');
+                                    toast.success('Registration Successful');
                                 }
-                                navigate('/')
+                                navigate('/');
                             })
-
                     })
                     .catch(error => console.log(error))
             })
+            .catch(error => console.log(error))
     }
 
     return (
@@ -60,7 +72,7 @@ const Register = () => {
                             Get Your Free Account Now.
                         </p>
 
-                        <SocialLogin/>
+                        <SocialLogin />
 
                         <div className='flex items-center justify-between mt-4'>
                             <span className='w-1/5 border-b  lg:w-1/4'></span>
@@ -95,15 +107,15 @@ const Register = () => {
                                     className='block mb-2 text-sm font-medium dark:text-blue'
                                     htmlFor='photo'
                                 >
-                                    Photo URL
+                                    Upload Photo
                                 </label>
                                 <input
                                     id='photo'
-                                    {...register("photoURL")}
+                                    {...register("photo", { required: false })}
                                     autoComplete='photo'
-                                    name='photoURL'
+                                    name='photo'
                                     className='block w-full px-4 py-4 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
-                                    type='text'
+                                    type='file'
                                     placeholder='photo URL'
                                 />
                             </div>
