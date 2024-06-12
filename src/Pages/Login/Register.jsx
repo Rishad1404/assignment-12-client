@@ -44,7 +44,6 @@ const Register = () => {
                         axiosPublic.put('/users', userInfo)
                             .then(res => {
                                 if (res.data.insertedId) {
-                                    console.log('user added to database');
                                     toast.success('Registration Successful');
                                 }
                                 navigate('/');

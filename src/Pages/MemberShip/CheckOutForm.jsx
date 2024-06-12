@@ -4,11 +4,14 @@ import { ImSpinner9 } from 'react-icons/im';
 import { useEffect, useState } from 'react';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import useAuth from '../../hooks/useAuth';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const CheckOutForm = () => {
     const [clientSecret, setClientSecret] = useState('')
     const stripe = useStripe();
-    const { user } = useAuth()
+    const navigate=useNavigate();
+    const { user } = useAuth();
     const elements = useElements();
     const axiosSecure = useAxiosSecure();
     const [cardError, setCardError] = useState('');
@@ -25,7 +28,6 @@ const CheckOutForm = () => {
 
     const getClientSecret = async price => {
         const { data } = await axiosSecure.post(`/create-payment-intent`, price)
-        console.log('client secret from server', data);
         setClientSecret(data.clientSecret)
     }
 
@@ -58,23 +60,51 @@ const CheckOutForm = () => {
         }
 
         // Confirm Payment
-        const{error:confirmError,paymentIntent}= await stripe.confirmCardPayment(clientSecret, {
+        const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: card,
                 billing_details: {
                     email: user.email,
-                    name: user.displayName, 
+                    name: user.displayName,
                 },
             },
         })
-        if(confirmError){
+        if (confirmError) {
             console.log(confirmError)
             setCardError(confirmError.message)
             setProcessing(false)
             return
         }
-        if(paymentIntent.status==='succeeded'){
-            console.log(paymentIntent)
+        if (paymentIntent.status === 'succeeded') {
+            try {
+                const userInfo = {
+                    name: user?.displayName,
+                    email: user?.email,
+                    photo: user.photo,
+                    badge: 'gold',
+                }
+                axiosSecure.put('/users', userInfo)
+                    .then(res => {
+                        if (res.data.modifiedCount>0) {
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                title: `Payment Successful`,
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            navigate('/dashboard')
+                        }
+                    })
+            }
+            catch(err){
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!",
+                    timer:1500
+                  });
+            }
             
         }
         setProcessing(false)
@@ -101,9 +131,9 @@ const CheckOutForm = () => {
                     }}
                 />
                 <button type="submit" disabled={!stripe || !clientSecret || processing} className="w-full flex items-center gap-3 justify-center text-center bg-violet-600 hover:bg-violet-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400 disabled:cursor-not-allowed">
-                 {
-                    processing ? <ImSpinner9 className='animate-spin' size={24}/>   : `Pay $${price}`
-                 }
+                    {
+                        processing ? <ImSpinner9 className='animate-spin' size={24} /> : `Pay $${price}`
+                    }
 
                 </button>
             </form>
