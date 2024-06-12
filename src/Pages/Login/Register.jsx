@@ -41,7 +41,7 @@ const Register = () => {
                             photo: imageUrl,
                             badge: 'bronze',
                         }
-                        axiosPublic.post('/users', userInfo)
+                        axiosPublic.put('/users', userInfo)
                             .then(res => {
                                 if (res.data.insertedId) {
                                     console.log('user added to database');

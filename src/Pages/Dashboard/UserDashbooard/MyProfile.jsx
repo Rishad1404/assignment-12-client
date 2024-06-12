@@ -6,11 +6,18 @@ const MyProfile = () => {
 
     const { mainUser } = useUser()
     const user = mainUser[0];
-    const [posts] = usePost()
+    const [posts] = usePost();
     const recentPosts = posts.slice(0, 3);
+
+    if (!user) {
+        return <span className="loading loading-bars loading-lg"></span>;
+    }
+
 
     return (
         <div className="max-w-9xl mx-auto p-8 bg-violet-100 shadow-lg rounded-lg">
+
+
             <h2 className="text-4xl text-center font-bold mb-8">My Profile</h2>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
                 <div className="w-48 h-48 rounded-full overflow-hidden shadow-md">
