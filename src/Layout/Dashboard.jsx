@@ -15,7 +15,7 @@ const Dashboard = () => {
         <div className="flex">
             <div className="w-96 min-h-screen bg-violet-300">
                 <div className="px-14 py-10">
-                    <img src={user.photoURL} className="h-56 w-56 rounded-full" alt="" />
+                    <img src={user.photoURL} className="h-56 w-56 rounded-full object-cover" alt="" />
                     <h2 className="lg:text-3xl font-bold p-1 text-violet-500">Welcome, {user.displayName}</h2>
                 </div>
                 <ul className="menu p-5">

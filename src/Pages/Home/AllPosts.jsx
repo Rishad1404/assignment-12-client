@@ -83,8 +83,7 @@ const AllPosts = () => {
                 }
             </div>
             {/* Pagination */}
-            <p>{currentPage}</p>
-            <div className="pagination">
+            <div className="pagination my-5">
                 <button onClick={handlePreviousPage} className="btn">Previous</button>
                 {
                     pages.map(page => <button

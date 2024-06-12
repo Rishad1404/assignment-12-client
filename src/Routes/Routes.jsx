@@ -15,11 +15,13 @@ import ManageUsers from "../Pages/Dashboard/AdminDashBoard/ManageUsers";
 import Activities from "../Pages/Dashboard/AdminDashBoard/Activities";
 import MakeAnnouncement from "../Pages/Dashboard/AdminDashBoard/MakeAnnouncement";
 import PostDetails from "../Pages/PostDetails";
+import Error from "../Layout/Error";
 
   export const router = createBrowserRouter([
     {
       path: "/",
       element: <Main></Main>,
+      errorElement:<Error></Error>,
       children:[
         {
             path:'/',
@@ -71,7 +73,8 @@ import PostDetails from "../Pages/PostDetails";
         },
         {
           path:'manageUsers',
-          element:<ManageUsers></ManageUsers>
+          element:<ManageUsers></ManageUsers>,
+          loader:()=>fetch('http://localhost:5000/usersCount')
         },
         {
           path:'activities',
