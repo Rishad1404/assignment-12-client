@@ -1,17 +1,22 @@
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+import CheckOutForm from "./CheckOutForm";
+const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK);
 
 const MemberShip = () => {
-    const {user}=useAuth();
-    const handleFreePlan=()=>{
+    const { user } = useAuth();
+    const handleFreePlan = () => {
         Swal.fire({
             position: "center",
             icon: "info",
             title: "You are already a Bronze Member",
             showConfirmButton: false,
             timer: 1500
-          });
+        });
     }
+
     return (
         <div>
             <div className=" w-full h-full">
@@ -90,14 +95,14 @@ const MemberShip = () => {
                                     </li>
                                 </ul>
                                 {
-                                    user? <button
-                                    onClick={handleFreePlan}
-                                    type="submit"
-                                    className="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-violet-100 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
-                                >
-                                    Get Now
-                                </button>:
-                                <></>
+                                    user ? <button
+                                        onClick={handleFreePlan}
+                                        type="submit"
+                                        className="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-violet-100 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
+                                    >
+                                        Get Now
+                                    </button> :
+                                        <></>
                                 }
                             </div>
                             <div className="w-11/12 h-2 mx-auto bg-violet-400 rounded-b opacity-75" />
@@ -139,12 +144,13 @@ const MemberShip = () => {
                                                 />
                                             </svg>
                                         </div>
-                                        <p className="font-medium text-white">Add More than 5 posts</p>
+                                        <p className="font-medium text-white">Add maximum 10 posts</p>
                                     </li>
                                 </ul>
                                 <button
+                                    onClick={() => document.getElementById('my_modal_3').showModal()}
                                     type="submit"
-                                    className="inline-flex items-center justify-center w-full h-12 px-6 font-semibold tracking-wide text-black transition duration-200 rounded shadow-md bg-violet-200 hover:bg-teal-accent-700 focus:shadow-outline focus:outline-none"
+                                    className="inline-flex items-center justify-center w-full h-12 px-6 font-semibold tracking-wide text-black transition duration-200 rounded shadow-md bg-violet-100 hover:bg-teal-accent-700 focus:shadow-outline focus:outline-none"
                                 >
                                     Get Now
                                 </button>
@@ -156,6 +162,17 @@ const MemberShip = () => {
                     </div>
                 </div>
             </div>
+            <dialog id="my_modal_3" className="modal">
+                <div className="modal-box bg-violet-100">
+                    <form method="dialog">
+                        {/* if there is a button in form, it will close the modal */}
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    </form>
+                    <Elements stripe={stripePromise}>
+                        <CheckOutForm></CheckOutForm>
+                    </Elements>
+                </div>
+            </dialog>
         </div>
     );
 };
