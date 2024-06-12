@@ -61,7 +61,7 @@ const MakeAnnouncement = () => {
                             <label className="label">
                                 <span className="label-text text-lg font-semibold">Title</span>
                             </label>
-                            <input type="text" placeholder="Title" {...register('title', { required: true })} className="input input-bordered w-full" />
+                            <input type="text" placeholder="Title" {...register('', { required: true })} className="input input-bordered w-full" />
                         </div>
                         <div className="mt-5">
                             <label className="label">

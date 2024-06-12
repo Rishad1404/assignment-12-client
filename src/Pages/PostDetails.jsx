@@ -1,15 +1,18 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { SlLike, SlDislike } from "react-icons/sl";
+import { useForm } from "react-hook-form";
 import { IoMdArrowBack } from "react-icons/io";
 import { BiComment } from "react-icons/bi";
 import useAxiosPublic from "../hooks/useAxiosPublic";
 import useAuth from "../hooks/useAuth";
 import ShareModal from '../Pages/Shared/ShareModal';
+import toast from 'react-hot-toast';
 
 const PostDetails = () => {
     const axiosPublic = useAxiosPublic();
+    const { register, handleSubmit, reset } = useForm();
     const { user } = useAuth();
     const { id } = useParams();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,12 +25,43 @@ const PostDetails = () => {
         }
     });
 
-    if (isLoading) return <span className="loading loading-bars loading-lg lg:mt-[500px] lg:ml-[1000px]"></span>;
-
     const shareUrl = `${window.location.origin}/post/${id}`;
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
+
+    const { data: comments = [], refetch } = useQuery({
+        queryKey: ['comments', id],
+        queryFn: async () => {
+            const res = await axiosPublic.get(`/comments?postId=${id}`);
+            return res.data;
+        },
+        enabled: !!post._id // Ensure the query is enabled only when post._id is available
+    });
+
+    const onSubmit = async (data) => {
+        const commentItem = {
+            email: user?.email,
+            commenter: user?.displayName,
+            commenterImage: user?.photoURL,
+            postId: post._id,
+            comment: data.comment,
+        };
+
+        try {
+            const response = await axiosPublic.post('/comments', commentItem);
+            if (response.data.insertedId) {
+                toast.success('Comment Added');
+                reset();
+                refetch();
+            }
+        } catch (error) {
+            console.error("Error posting comment:", error);
+            toast.error('Failed to add comment');
+        }
+    };
+
+    if (isLoading) return <span className="loading loading-bars loading-lg lg:mt-[500px] lg:ml-[1000px]"></span>;
 
     return (
         <div className="container mx-auto my-20">
@@ -74,21 +108,31 @@ const PostDetails = () => {
                 </div>
             </div>
             {isModalOpen && <ShareModal shareUrl={shareUrl} onClose={closeModal} />}
-            {
-                user ? <div className="mt-10">
-                    <h2 className="text-4xl font-bold mb-10">Comments({post.commentCount})</h2>
-                    <form>
-                        <textarea placeholder="Comment Here" className="textarea textarea-bordered textarea-lg w-full max-w-full" ></textarea>
+            {user ? (
+                <div className="mt-10">
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <textarea {...register('comment')} placeholder="Comment Here" className="textarea textarea-bordered textarea-lg w-full max-w-full" ></textarea>
                         <button type="submit" className="btn bg-violet-300 w-full text-lg font-bold">Comment</button>
                     </form>
-                    <hr className="mt-10" />
-                    <div>
+                    <h2 className="text-4xl font-bold mt-10">Comments ({comments.length})</h2>
+                    <hr className="mt-5" />
+                    <div className="mt-10 space-y-6">
+                        {comments.map((comment, index) => (
+                            <div key={index} className="flex space-x-4 p-4 border rounded-lg shadow-sm">
+                                <img src={comment.commenterImage} alt="User" className="w-12 h-12 rounded-full shadow-md" />
+                                <div className="flex flex-col">
+                                    <p className="font-bold text-violet-900">{comment.commenter}</p>
+                                    <p className="text-gray-700 text-xl">{comment.comment}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                </div> :
-                    <div className="text-center mt-10">
-                        <h2 className="text-xl font-bold text-violet-800">Comments are turned off. Login to comment in the post. <Link to='/login' className="underline text-violet-600">Login Now</Link></h2>
-                    </div>
-            }
+                </div>
+            ) : (
+                <div className="text-center mt-10">
+                    <h2 className="text-xl font-bold text-violet-800">Comments are turned off. Login to comment on the post. <Link to='/login' className="underline text-violet-600">Login Now</Link></h2>
+                </div>
+            )}
         </div>
     );
 };

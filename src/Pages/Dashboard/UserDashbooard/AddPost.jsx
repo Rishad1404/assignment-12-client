@@ -7,9 +7,10 @@ import useAuth from "../../../hooks/useAuth";
 import usePost from "../../../hooks/usePost";
 import { Link } from "react-router-dom";
 import { useRef } from "react";
+import useUser from "../../../hooks/useUser";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
-const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 const AddPost = () => {
     const { register, handleSubmit, reset } = useForm();
@@ -18,19 +19,22 @@ const AddPost = () => {
     const { user } = useAuth();
     const [post] = usePost();
     const modalRef = useRef();
+    const { mainUser } = useUser();
+    const User = mainUser[0];
+
     console.log(post);
 
     const onSubmit = async (data) => {
-
-        // image upload to imgbb and then get an url
-        const imageFile = { image: data.image[0] }
+        // Image upload to imgbb and then get the URL
+        const imageFile = { image: data.image[0] };
         const res = await axiosPublic.post(image_hosting_api, imageFile, {
             headers: {
                 'content-type': 'multipart/form-data'
             }
         });
+
         if (res.data.success) {
-            // Now send the menu item data to the server with menu url
+            // Send the post data to the server with the image URL
             const postItem = {
                 authorName: user.displayName,
                 authorEmail: user.email,
@@ -43,31 +47,40 @@ const AddPost = () => {
                 upVote: 0,
                 downVote: 0,
                 commentCount: {},
+            };
 
-            }
-            // 
             const postRes = await axiosSecure.post('/posts', postItem);
             console.log(postRes.data);
+
             if (postRes.data.insertedId) {
-                // Show sucess Popup
+                // Show success popup
                 Swal.fire({
                     position: "center",
                     icon: "success",
-                    title: `SuccessFully added post`,
+                    title: "Successfully added post",
                     showConfirmButton: false,
                     timer: 1500
                 });
                 reset();
             }
         }
+    };
 
+    const handleAddPostClick = () => {
+        if (User.badge === 'bronze') {
+            modalRef.current.showModal();
+        } else if (User.badge === 'gold' && post.length >= 10) {
+            modalRef.current.showModal()
+        } else {
+            handleSubmit(onSubmit);
+        }
+    };
 
-    }
     return (
         <div className="bg-violet-100 p-10 rounded-lg">
-            <h2 className="text-6xl text-center font-bold text-violet-800">Add A post</h2>
+            <h2 className="text-6xl text-center font-bold text-violet-800">Add A Post</h2>
             <div>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form>
                     <div className="form-control w-full mt-10">
                         <label className="label">
                             <span className="label-text">Post Title</span>
@@ -79,8 +92,8 @@ const AddPost = () => {
                         <label className="label">
                             <span className="label-text">Tag</span>
                         </label>
-                        <select defaultValue='default' {...register('tag', { required: true })} className="select select-bordered w-full ">
-                            <option disabled value='default' >Select a Tag</option>
+                        <select defaultValue='default' {...register('tag', { required: true })} className="select select-bordered w-full">
+                            <option disabled value='default'>Select a Tag</option>
                             <option value="javascript">JavaScript</option>
                             <option value="react">React</option>
                             <option value="mongodb">MongoDB</option>
@@ -89,7 +102,6 @@ const AddPost = () => {
                             <option value="nodejs">NodeJS</option>
                         </select>
                     </div>
-
 
                     <label className="form-control mt-5">
                         <div className="label">
@@ -104,11 +116,9 @@ const AddPost = () => {
                         <input {...register('image', { required: true })} type="file" className="file-input file-input-bordered w-full" />
                     </div>
 
-                    {post.length >= 5 ? (
-                        <button type="button" onClick={() => modalRef.current.showModal()} className="btn bg-violet-500 text-white mt-10">Add Item <IoCreateOutline className="text-xl" /></button>
-                    ) : (
-                        <button type="submit" className="btn bg-violet-500 text-white mt-10">Add Item <IoCreateOutline className="text-xl" /></button>
-                    )}
+                    <button type="button" onClick={handleAddPostClick} className="btn bg-violet-500 text-white mt-10">
+                        Add Item <IoCreateOutline className="text-xl" />
+                    </button>
                 </form>
             </div>
             <dialog ref={modalRef} id="my_modal_3" className="modal">
@@ -116,11 +126,10 @@ const AddPost = () => {
                     <form method="dialog">
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
-                    <h3 className="font-bold text-xl my-3 text-center">You have reached the maximum post limit for normal users.</h3>
+                    <h3 className="font-bold text-xl my-3 text-center">You have reached the maximum post limit.</h3>
                     <Link to='/membership'><button className="btn bg-violet-400 text-xl ml-32 text-white">Become a Member</button></Link>
                 </div>
             </dialog>
-
         </div>
     );
 };
