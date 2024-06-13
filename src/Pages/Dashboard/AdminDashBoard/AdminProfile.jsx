@@ -2,19 +2,40 @@ import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const AdminProfile = () => {
+    const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
 
-    const {user}=useAuth()
-    const axiosSecure=useAxiosSecure()
-
-    const {data:stats=[]}=useQuery({
-        queryKey:['admin-stats'],
-        queryFn:async()=>{
-            const res=await axiosSecure.get('/admin-stats');
-            return res.data
+    const { data: stats = {} } = useQuery({
+        queryKey: ['admin-stats'],
+        queryFn: async () => {
+            const res = await axiosSecure.get('/admin-stats');
+            return res.data;
         }
-    })
+    });
+
+    const RADIAN = Math.PI / 180;
+    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+                {`${(percent * 100).toFixed(0)}%`}
+            </text>
+        );
+    };
+
+    const data = [
+        { name: 'Posts', value: stats.posts || 0 },
+        { name: 'Comments', value: stats.comments || 0 },
+        { name: 'Users', value: stats.users || 0 },
+    ];
 
     return (
         <div className="max-w-7xl mx-auto p-6">
@@ -40,6 +61,29 @@ const AdminProfile = () => {
                 <div className="bg-violet-100 shadow-md rounded-lg p-6 text-center">
                     <div className="text-4xl font-bold text-gray-700">{stats.users}</div>
                     <div className="text-lg text-gray-500">Users</div>
+                </div>
+            </div>
+            <div className="flex justify-center items-center mb-4">
+                <div className="w-full md:w-1/2 h-96">
+                    <ResponsiveContainer>
+                        <PieChart>
+                            <Pie
+                                data={data}
+                                cx="50%"
+                                cy="50%"
+                                labelLine={false}
+                                label={renderCustomizedLabel}
+                                outerRadius={180}
+                                fill="#8884d8"
+                                dataKey="value"
+                            >
+                                {data.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Legend/>
+                        </PieChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
             <div>
