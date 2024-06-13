@@ -36,11 +36,12 @@ const PostDetails = () => {
             const res = await axiosPublic.get(`/comments?postId=${id}`);
             return res.data;
         },
-        enabled: !!post._id // Ensure the query is enabled only when post._id is available
+        enabled: !!post._id
     });
 
     const onSubmit = async (data) => {
         const commentItem = {
+            title:post.postTitle,
             email: user?.email,
             commenter: user?.displayName,
             commenterImage: user?.photoURL,

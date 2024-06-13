@@ -17,6 +17,8 @@ import MakeAnnouncement from "../Pages/Dashboard/AdminDashBoard/MakeAnnouncement
 import PostDetails from "../Pages/PostDetails";
 import Error from "../Layout/Error";
 import CommentsPage from "../Pages/Dashboard/UserDashbooard/CommentsPage";
+import AdminProfile from "../Pages/Dashboard/AdminDashBoard/AdminProfile";
+import AdminRoute from "./AdminRoute";
 
   export const router = createBrowserRouter([
     {
@@ -67,14 +69,14 @@ import CommentsPage from "../Pages/Dashboard/UserDashbooard/CommentsPage";
           element:<MyPosts></MyPosts>
         },
         {
-          path:'comments/:id',
+          path:'comment/:title',
           element:<CommentsPage></CommentsPage>
         },
 
         // Admin Dashboard
         {
           path:'adminProfile',
-          element:<></>,
+          element:<AdminRoute><AdminProfile></AdminProfile></AdminRoute>,
         },
         {
           path:'manageUsers',

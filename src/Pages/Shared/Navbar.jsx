@@ -9,11 +9,13 @@ import { MdOutlineLogout } from "react-icons/md";
 import { AiOutlineDashboard } from "react-icons/ai";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
+import useAdmin from "../../hooks/useAdmin";
 
 const Navbar = () => {
     const { user, logout } = useContext(AuthContext)
     const [isClicked, setIsClicked] = useState(false);
     const axiosPublic = useAxiosPublic();
+    const [isAdmin]=useAdmin()
 
     const { data: announcements = [] } = useQuery({
         queryKey: ['announcements'],
@@ -113,7 +115,13 @@ const Navbar = () => {
                                     {
                                         user && user.displayName ? <li className="disabled"><a className="text-lg"><CgProfile /> {user.displayName}</a></li> : <li className="disabled"><a className="text-lg"><CgProfile /> Name</a></li>
                                     }
-                                    <Link to='/dashboard/myProfile' className="flex items-center"><AiOutlineDashboard className="text-lg ml-3 " /><li className="text-lg px-3"> Dashboard</li></Link>
+                                    {
+                                        user && isAdmin && <Link to='/dashboard/adminProfile' className="flex items-center"><AiOutlineDashboard className="text-lg ml-3 " /><li className="text-lg px-3"> Dashboard</li></Link>
+                                    }
+                                    {
+                                        user && !isAdmin && <Link to='/dashboard/myProfile' className="flex items-center"><AiOutlineDashboard className="text-lg ml-3 " /><li className="text-lg px-3"> Dashboard</li></Link>
+                                    }
+                                    
                                     <li><button onClick={handleLogout} className="text-lg"><MdOutlineLogout /> Logout</button></li>
                                 </ul>
                             </div>

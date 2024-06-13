@@ -58,7 +58,7 @@ const MyPosts = () => {
                                     <th>{idx}</th>
                                     <td>{post.postTitle}</td>
                                     <td>{post.upVote}</td>
-                                    <td className="text-center"><Link to={`/comments/${post._id}`}><button className="btn bg-green-400">View Comments</button></Link></td>
+                                    <td className="text-center"><Link to={`/comment/${encodeURIComponent(post.postTitle)}`}><button className="btn bg-green-400">View Comments</button></Link></td>
 
                                     <td>
                                         <button onClick={() => handleDeletePost(post)} className="btn btn-ghost bg-red-600"><FaTrashAlt className="text-white text-xl" /></button>
