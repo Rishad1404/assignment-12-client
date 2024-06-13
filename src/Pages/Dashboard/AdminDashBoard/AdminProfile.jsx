@@ -1,12 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-
+import { useForm } from "react-hook-form";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const AdminProfile = () => {
+    const { register, handleSubmit,reset} = useForm();
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
@@ -17,6 +18,12 @@ const AdminProfile = () => {
             return res.data;
         }
     });
+    const onSubmit = async (data) => {
+        const tag = { name: data.tag };
+        const result = await axiosSecure.post('/tags', tag);
+        console.log(result.data); 
+        reset();  
+    };
 
     const RADIAN = Math.PI / 180;
     const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
@@ -39,9 +46,9 @@ const AdminProfile = () => {
 
     return (
         <div className="max-w-7xl mx-auto p-6">
-            <div className="text-center mb-8">
-                <h2 className="text-6xl font-bold text-gray-800">Admin Profile</h2>
-            </div>
+            {/* <div className="text-center mb-8">
+                <h2 className="text-6xl font-bold text-gray-800 bg-violet-200 py-5">Admin Profile</h2>
+            </div> */}
             <div className="flex items-center mb-8">
                 <img src={user.photoURL} alt="Admin" className="rounded-full w-36 h-36 mr-6" />
                 <div>
@@ -88,8 +95,8 @@ const AdminProfile = () => {
             </div>
             <div>
                 <h3 className="text-2xl font-semibold text-gray-800 mb-4">Add Tags</h3>
-                <form className="flex flex-col">
-                    <input type="text" placeholder="Enter new tag" className="p-2 mb-4 border border-gray-300 rounded" />
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+                    <input {...register('tag')} type="text" placeholder="Enter new tag" className="p-2 mb-4 border border-gray-300 rounded" />
                     <button type="submit" className="p-2 bg-violet-500 text-white rounded hover:bg-violet-400">Add Tag</button>
                 </form>
             </div>

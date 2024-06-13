@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import usePost from "../../../hooks/usePost";
 import { Link } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import useUser from "../../../hooks/useUser";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
@@ -22,7 +22,29 @@ const AddPost = () => {
     const { mainUser } = useUser();
     const User = mainUser[0];
 
-    console.log(post);
+    const [tags, setTags] = useState([
+        "javascript",
+        "react",
+        "mongodb",
+        "express",
+        "python",
+        "nodejs"
+    ]); // Static initial tags
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            const res = await axiosSecure.get('/tags')
+                .catch(error => {
+                    console.error('Error fetching tags:', error);
+                    return { data: [] };
+                });
+
+            const fetchedTags = res.data.map(tag => tag.name);
+            setTags([...new Set([...tags, ...fetchedTags])]); 
+        };
+
+        fetchTags();
+    }, [axiosSecure, tags]); 
 
     const onSubmit = async (data) => {
         // Image upload to imgbb and then get the URL
@@ -70,9 +92,9 @@ const AddPost = () => {
         if (User.badge === 'bronze') {
             modalRef.current.showModal();
         } else if (User.badge === 'gold' && post.length >= 10) {
-            modalRef.current.showModal()
+            modalRef.current.showModal();
         } else {
-            handleSubmit(onSubmit);
+            handleSubmit(onSubmit)();
         }
     };
 
@@ -80,7 +102,7 @@ const AddPost = () => {
         <div className="bg-violet-100 p-10 rounded-lg">
             <h2 className="text-6xl text-center font-bold text-violet-800">Add A Post</h2>
             <div>
-                <form>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-control w-full mt-10">
                         <label className="label">
                             <span className="label-text">Post Title</span>
@@ -94,12 +116,9 @@ const AddPost = () => {
                         </label>
                         <select defaultValue='default' {...register('tag', { required: true })} className="select select-bordered w-full">
                             <option disabled value='default'>Select a Tag</option>
-                            <option value="javascript">JavaScript</option>
-                            <option value="react">React</option>
-                            <option value="mongodb">MongoDB</option>
-                            <option value="express">Express JS</option>
-                            <option value="python">Python</option>
-                            <option value="nodejs">NodeJS</option>
+                            {tags.map((tag, index) => (
+                                <option key={index} value={tag}>{tag}</option>
+                            ))}
                         </select>
                     </div>
 
