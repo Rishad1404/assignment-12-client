@@ -3,6 +3,7 @@ import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useForm } from "react-hook-form";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
+import toast from "react-hot-toast";
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
@@ -22,6 +23,7 @@ const AdminProfile = () => {
         const tag = { name: data.tag };
         const result = await axiosSecure.post('/tags', tag);
         console.log(result.data); 
+        toast.success('Tag added successfully');
         reset();  
     };
 

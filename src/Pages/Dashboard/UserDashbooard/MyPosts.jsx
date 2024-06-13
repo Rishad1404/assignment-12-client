@@ -6,9 +6,10 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
 
 const MyPosts = () => {
-    const [posts,refetch]=usePost();
-    const axiosSecure=useAxiosSecure();
-    const handleDeletePost= post => {
+    const [posts, refetch] = usePost();
+    const axiosSecure = useAxiosSecure();
+
+    const handleDeletePost = post => {
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -19,23 +20,29 @@ const MyPosts = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-
                 axiosSecure.delete(`/myPosts/${post._id}`)
                     .then(res => {
                         if (res.data.deletedCount > 0) {
-                            refetch()
+                            refetch();
                             Swal.fire({
                                 title: "Deleted!",
                                 text: "Your file has been deleted.",
                                 icon: "success"
-
                             });
                         }
                     })
+                    .catch(error => {
+                        console.error("Error deleting post:", error);
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to delete the post.",
+                            icon: "error"
+                        });
+                    });
             }
         });
-    }
-    
+    };
+
     return (
         <div>
             <SectionTitle heading="My Posts"/>
@@ -53,19 +60,24 @@ const MyPosts = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {
-                                posts.map((post, idx) => <tr key={post}>
+                            {posts.map((post, idx) => (
+                                <tr key={post._id}>
                                     <th>{idx}</th>
                                     <td>{post.postTitle}</td>
                                     <td>{post.upVote}</td>
-                                    <td className="text-center"><Link to={`/comment/${encodeURIComponent(post.postTitle)}`}><button className="btn bg-green-400">View Comments</button></Link></td>
-
-                                    <td>
-                                        <button onClick={() => handleDeletePost(post)} className="btn btn-ghost bg-red-600"><FaTrashAlt className="text-white text-xl" /></button>
+                                    <td className="text-center">
+                                        {/* Changed Link to pass postId as a URL parameter */}
+                                        <Link to={`/dashboard/myPosts/comments/${post._id}`}>
+                                            <button className="btn bg-green-400">View Comments</button>
+                                        </Link>
                                     </td>
-                                </tr>)
-                            }
-
+                                    <td>
+                                        <button onClick={() => handleDeletePost(post)} className="btn btn-ghost bg-red-600">
+                                            <FaTrashAlt className="text-white text-xl" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

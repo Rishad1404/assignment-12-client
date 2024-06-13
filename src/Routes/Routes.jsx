@@ -19,6 +19,7 @@ import Error from "../Layout/Error";
 import CommentsPage from "../Pages/Dashboard/UserDashbooard/CommentsPage";
 import AdminProfile from "../Pages/Dashboard/AdminDashBoard/AdminProfile";
 import AdminRoute from "./AdminRoute";
+import Contact from "../Pages/Shared/Contact";
 
   export const router = createBrowserRouter([
     {
@@ -69,8 +70,13 @@ import AdminRoute from "./AdminRoute";
           element:<MyPosts></MyPosts>
         },
         {
-          path:'comment/:title',
+          path:'/dashboard/myPosts/comments/:id',
           element:<CommentsPage></CommentsPage>
+        },
+        {
+          path:'/dashboard/contact',
+          element:<Contact></Contact>
+
         },
 
         // Admin Dashboard

@@ -29,7 +29,7 @@ const AddPost = () => {
         "express",
         "python",
         "nodejs"
-    ]); // Static initial tags
+    ]);
 
     useEffect(() => {
         const fetchTags = async () => {
