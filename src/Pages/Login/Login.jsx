@@ -37,7 +37,7 @@ const Login = () => {
             });
     };
 
-    if (loading) return <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin dark:border-violet-600"></div>;
+    if (loading) return <div className="w-16 h-16 border-4 border-dashed text-center lg:mt-96 rounded-full animate-spin dark:border-violet-600"></div>;
 
     return (
         <div>

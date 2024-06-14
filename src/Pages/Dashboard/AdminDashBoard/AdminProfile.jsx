@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const AdminProfile = () => {
-    const { register, handleSubmit,reset} = useForm();
+    const { register, handleSubmit, reset } = useForm();
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
@@ -19,6 +19,7 @@ const AdminProfile = () => {
             return res.data;
         }
     });
+
     const onSubmit = async (data) => {
         const tag = { name: data.tag };
         const result = await axiosSecure.post('/tags', tag);
@@ -47,33 +48,30 @@ const AdminProfile = () => {
     ];
 
     return (
-        <div className="max-w-7xl mx-auto p-6">
-            {/* <div className="text-center mb-8">
-                <h2 className="text-6xl font-bold text-gray-800 bg-violet-200 py-5">Admin Profile</h2>
-            </div> */}
-            <div className="flex items-center mb-8">
-                <img src={user.photoURL} alt="Admin" className="rounded-full w-36 h-36 mr-6" />
-                <div>
-                    <h3 className="text-3xl font-semibold text-gray-700">{user.displayName}</h3>
+        <div className="max-w-7xl mx-auto p-4 md:p-6">
+            <div className="flex flex-col md:flex-row items-center mb-8">
+                <img src={user.photoURL} alt="Admin" className="rounded-full w-24 h-24 md:w-36 md:h-36 mr-0 md:mr-6 mb-4 md:mb-0" />
+                <div className="text-center md:text-left">
+                    <h3 className="text-2xl md:text-3xl font-semibold text-gray-700">{user.displayName}</h3>
                     <p className="text-lg text-gray-600">Email: {user.email}</p>
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-violet-100 shadow-md rounded-lg p-6 text-center">
-                    <div className="text-4xl font-bold text-gray-700">{stats.posts}</div>
-                    <div className="text-lg text-gray-500">Posts</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
+                <div className="bg-violet-100 shadow-md rounded-lg p-4 md:p-6 text-center">
+                    <div className="text-3xl md:text-4xl font-bold text-gray-700">{stats.posts}</div>
+                    <div className="text-base md:text-lg text-gray-500">Posts</div>
                 </div>
-                <div className="bg-violet-100 shadow-md rounded-lg p-6 text-center">
-                    <div className="text-4xl font-bold text-gray-700">{stats.comments}</div>
-                    <div className="text-lg text-gray-500">Comments</div>
+                <div className="bg-violet-100 shadow-md rounded-lg p-4 md:p-6 text-center">
+                    <div className="text-3xl md:text-4xl font-bold text-gray-700">{stats.comments}</div>
+                    <div className="text-base md:text-lg text-gray-500">Comments</div>
                 </div>
-                <div className="bg-violet-100 shadow-md rounded-lg p-6 text-center">
-                    <div className="text-4xl font-bold text-gray-700">{stats.users}</div>
-                    <div className="text-lg text-gray-500">Users</div>
+                <div className="bg-violet-100 shadow-md rounded-lg p-4 md:p-6 text-center">
+                    <div className="text-3xl md:text-4xl font-bold text-gray-700">{stats.users}</div>
+                    <div className="text-base md:text-lg text-gray-500">Users</div>
                 </div>
             </div>
             <div className="flex justify-center items-center mb-4">
-                <div className="w-full md:w-1/2 h-96">
+                <div className="w-full h-64 md:w-1/2 md:h-96">
                     <ResponsiveContainer>
                         <PieChart>
                             <Pie
@@ -82,7 +80,8 @@ const AdminProfile = () => {
                                 cy="50%"
                                 labelLine={false}
                                 label={renderCustomizedLabel}
-                                outerRadius={180}
+                                outerRadius={110}
+                                md:outerRadius={150}
                                 fill="#8884d8"
                                 dataKey="value"
                             >
@@ -90,13 +89,13 @@ const AdminProfile = () => {
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
                             </Pie>
-                            <Legend/>
+                            <Legend />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
             </div>
             <div>
-                <h3 className="text-2xl font-semibold text-gray-800 mb-4">Add Tags</h3>
+                <h3 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">Add Tags</h3>
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
                     <input {...register('tag')} type="text" placeholder="Enter new tag" className="p-2 mb-4 border border-gray-300 rounded" />
                     <button type="submit" className="p-2 bg-violet-500 text-white rounded hover:bg-violet-400">Add Tag</button>

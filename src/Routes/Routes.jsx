@@ -30,7 +30,7 @@ import Contact from "../Pages/Shared/Contact";
         {
             path:'/',
             element:<Home></Home>,
-            loader:()=>fetch('http://localhost:5000/postsCount')
+            loader:()=>fetch('https://topic-talk-server.vercel.app/postsCount')
             
         },
         {
@@ -87,7 +87,7 @@ import Contact from "../Pages/Shared/Contact";
         {
           path:'manageUsers',
           element:<ManageUsers></ManageUsers>,
-          loader:()=>fetch('http://localhost:5000/usersCount')
+          loader:()=>fetch('https://topic-talk-server.vercel.app/usersCount')
         },
         {
           path:'activities',
