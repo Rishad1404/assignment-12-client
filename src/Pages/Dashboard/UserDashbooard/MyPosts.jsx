@@ -4,6 +4,7 @@ import usePost from "../../../hooks/usePost";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const MyPosts = () => {
     const [posts, refetch] = usePost();
@@ -45,6 +46,9 @@ const MyPosts = () => {
 
     return (
         <div>
+             <Helmet>  
+                <title>My Posts</title>
+            </Helmet>
             <SectionTitle heading="My Posts"/>
             <div>
                 <div className="overflow-x-auto max-w-6xl border-2 rounded-xl lg:ml-64">

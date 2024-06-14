@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckOutForm from "./CheckOutForm";
+import { Helmet } from "react-helmet-async";
 const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK);
 
 const MemberShip = () => {
@@ -19,6 +20,9 @@ const MemberShip = () => {
 
     return (
         <div>
+             <Helmet>  
+                <title>Topic Talk | Membership</title>
+            </Helmet>
             <div className=" w-full h-full">
                 <div className=" hidden w-full bg-gray-50 h-20 lg:block" />
                 <div className=" px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">

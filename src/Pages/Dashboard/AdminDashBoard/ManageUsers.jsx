@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
@@ -83,6 +84,9 @@ const ManageUsers = () => {
     }
     return (
         <div>
+            <Helmet>  
+                <title>Manage Users</title>
+            </Helmet>
             <SectionTitle heading='Manage Users'></SectionTitle>
             <div className="text-center my-5">
                 <div className=" max-w-xs lg:ml-[40%]">

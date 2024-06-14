@@ -12,6 +12,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { SearchProvider } from './hooks/useSearch';
+import { HelmetProvider } from 'react-helmet-async';
 
 const queryClient = new QueryClient();
 
@@ -20,8 +21,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <AuthProvider>
       <SearchProvider>
         <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-          <Toaster position="top-right" reverseOrder={false}></Toaster>
+          <HelmetProvider>
+            <RouterProvider router={router} />
+            <Toaster position="top-right" reverseOrder={false}></Toaster>
+          </HelmetProvider>
         </QueryClientProvider>
       </SearchProvider>
     </AuthProvider>

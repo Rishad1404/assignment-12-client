@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from '../../Provider/AuthProvider';
 import SocialLogin from './SocialLogin';
+import { Helmet } from 'react-helmet-async';
 
 const Login = () => {
     const { signIn, user, loading } = useContext(AuthContext);
@@ -41,6 +42,9 @@ const Login = () => {
 
     return (
         <div>
+            <Helmet>  
+                <title>Topic Talk | Login</title>
+            </Helmet>
             <div className="container mx-auto mb-20 my-20">
                 <div className="flex justify-center items-center">
                     <div className="flex w-full max-w-sm mx-auto overflow-hidden bg-base-200 rounded-lg shadow-lg lg:h-[600px] lg:max-w-7xl">

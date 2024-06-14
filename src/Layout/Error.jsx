@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { FaBackward, FaHome } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -5,9 +6,10 @@ import { Link } from "react-router-dom";
 const Error = () => {
     return (
         <div>
+             <Helmet>  
+                <title>Error</title>
+            </Helmet>
             <div className="container px-6 mx-auto lg:flex lg:items-center lg:gap-12">
-
-
                 <div className="relative">
                     <img className="max-h-screen" src="https://i.imgur.com/YwdWKjp.png" alt="" />
                     <div className="flex items-center gap-10 mt-10 absolute ">

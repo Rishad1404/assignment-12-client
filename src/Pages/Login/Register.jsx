@@ -6,6 +6,7 @@ import { AuthContext } from '../../Provider/AuthProvider';
 import toast from 'react-hot-toast';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import SocialLogin from './SocialLogin';
+import { Helmet } from 'react-helmet-async';
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`
@@ -56,6 +57,9 @@ const Register = () => {
 
     return (
         <div>
+            <Helmet>  
+                <title>Topic Talk | Sign Up</title>
+            </Helmet>
             <div className='flex justify-center items-center min-h-[calc(100vh-306px)] my-20'>
                 <div className='flex w-full max-w-sm mx-auto overflow-hidden bg-base-200 rounded-lg shadow-lg lg:h-[800px]  lg:max-w-7xl '>
                     <div className='w-full px-6 py-8 md:px-8 lg:w-1/2'>

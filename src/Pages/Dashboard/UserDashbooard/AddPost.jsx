@@ -8,6 +8,7 @@ import usePost from "../../../hooks/usePost";
 import { Link } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
 import useUser from "../../../hooks/useUser";
+import { Helmet } from "react-helmet-async";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
@@ -40,11 +41,11 @@ const AddPost = () => {
                 });
 
             const fetchedTags = res.data.map(tag => tag.name);
-            setTags([...new Set([...tags, ...fetchedTags])]); 
+            setTags([...new Set([...tags, ...fetchedTags])]);
         };
 
         fetchTags();
-    }, [axiosSecure, tags]); 
+    }, [axiosSecure, tags]);
 
     const onSubmit = async (data) => {
         // Image upload to imgbb and then get the URL
@@ -99,56 +100,61 @@ const AddPost = () => {
     };
 
     return (
-        <div className="bg-violet-100 p-10 rounded-lg">
-            <h2 className="text-6xl text-center font-bold text-violet-800">Add A Post</h2>
-            <div>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="form-control w-full mt-10">
-                        <label className="label">
-                            <span className="label-text">Post Title</span>
-                        </label>
-                        <input type="text" placeholder="Post Title" {...register('title', { required: true })} className="input input-bordered w-full" />
-                    </div>
-                    {/* Tag */}
-                    <div className="form-control w-full mt-5">
-                        <label className="label">
-                            <span className="label-text">Tag</span>
-                        </label>
-                        <select defaultValue='default' {...register('tag', { required: true })} className="select select-bordered w-full">
-                            <option disabled value='default'>Select a Tag</option>
-                            {tags.map((tag, index) => (
-                                <option key={index} value={tag}>{tag}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <label className="form-control mt-5">
-                        <div className="label">
-                            <span className="label-text">Post Description</span>
+        <div>
+            <Helmet>  
+                <title>Add Post</title>
+            </Helmet>
+            <div className="bg-violet-100 p-10 rounded-lg">
+                <h2 className="text-6xl text-center font-bold text-violet-800">Add A Post</h2>
+                <div>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="form-control w-full mt-10">
+                            <label className="label">
+                                <span className="label-text">Post Title</span>
+                            </label>
+                            <input type="text" placeholder="Post Title" {...register('title', { required: true })} className="input input-bordered w-full" />
                         </div>
-                        <textarea {...register('description')} className="textarea textarea-bordered h-24" placeholder="Post Description"></textarea>
-                    </label>
-                    <div className="mt-5">
-                        <label className="label">
-                            <span className="label-text">Post Image</span>
-                        </label>
-                        <input {...register('image', { required: true })} type="file" className="file-input file-input-bordered w-full" />
-                    </div>
+                        {/* Tag */}
+                        <div className="form-control w-full mt-5">
+                            <label className="label">
+                                <span className="label-text">Tag</span>
+                            </label>
+                            <select defaultValue='default' {...register('tag', { required: true })} className="select select-bordered w-full">
+                                <option disabled value='default'>Select a Tag</option>
+                                {tags.map((tag, index) => (
+                                    <option key={index} value={tag}>{tag}</option>
+                                ))}
+                            </select>
+                        </div>
 
-                    <button type="button" onClick={handleAddPostClick} className="btn bg-violet-500 text-white mt-10">
-                        Add Item <IoCreateOutline className="text-xl" />
-                    </button>
-                </form>
-            </div>
-            <dialog ref={modalRef} id="my_modal_3" className="modal">
-                <div className="modal-box">
-                    <form method="dialog">
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        <label className="form-control mt-5">
+                            <div className="label">
+                                <span className="label-text">Post Description</span>
+                            </div>
+                            <textarea {...register('description')} className="textarea textarea-bordered h-24" placeholder="Post Description"></textarea>
+                        </label>
+                        <div className="mt-5">
+                            <label className="label">
+                                <span className="label-text">Post Image</span>
+                            </label>
+                            <input {...register('image', { required: true })} type="file" className="file-input file-input-bordered w-full" />
+                        </div>
+
+                        <button type="button" onClick={handleAddPostClick} className="btn bg-violet-500 text-white mt-10">
+                            Add Item <IoCreateOutline className="text-xl" />
+                        </button>
                     </form>
-                    <h3 className="font-bold text-xl my-3 text-center">You have reached the maximum post limit.</h3>
-                    <Link to='/membership'><button className="btn bg-violet-400 text-xl ml-32 text-white">Become a Member</button></Link>
                 </div>
-            </dialog>
+                <dialog ref={modalRef} id="my_modal_3" className="modal">
+                    <div className="modal-box">
+                        <form method="dialog">
+                            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        </form>
+                        <h3 className="font-bold text-xl my-3 text-center">You have reached the maximum post limit.</h3>
+                        <Link to='/membership'><button className="btn bg-violet-400 text-xl ml-32 text-white">Become a Member</button></Link>
+                    </div>
+                </dialog>
+            </div>
         </div>
     );
 };
