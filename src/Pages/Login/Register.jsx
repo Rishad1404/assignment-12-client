@@ -41,7 +41,7 @@ const Register = () => {
                             photo: imageUrl,
                             badge: 'bronze',
                         }
-                        axiosPublic.put('/users', userInfo)
+                        axiosPublic.put('/user', userInfo)
                             .then(res => {
                                 if (res.data.insertedId) {
                                     toast.success('Registration Successful');

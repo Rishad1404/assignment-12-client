@@ -30,19 +30,16 @@ const CommentsPage = () => {
 
     const handleReport = async (commentId) => {
         const selectedFeedback = feedback[commentId];
-
-        try {
-            await axiosPublic.post('/report-comment', {
+        const commentText = comments.find(comment => comment._id === commentId).comment;
+            await axiosPublic.post('/reports', {
                 commentId,
+                comment:commentText,
                 feedback: selectedFeedback,
                 reportedBy: user?.email,
             });
             toast.success('Comment reported');
             setReportDisabled(true);
-        } catch (error) {
-            console.error("Error reporting comment:", error);
-            toast.error('Failed to report comment');
-        }
+        
     };
 
     const handleReadMore = (comment) => {
@@ -101,7 +98,7 @@ const CommentsPage = () => {
                                         className="border p-2 focus:outline-none font-bold"
                                     >
                                         <option value="">Select Feedback</option>
-                                        <option value="Inappropriate Content">Inappropriate Content</option>
+                                        <option value="Inappropriate Content">Inappropriate</option>
                                         <option value="Spam">Spam</option>
                                         <option value="Harassment">Harassment</option>
                                     </select>
