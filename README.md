@@ -1,20 +1,38 @@
-Name of the Website: Topic Talk
-Admin User Name: Rock Johnson
-Admin Password:123456
-Live Site URL: https://topic-talk-2b5cc.web.app
-Features of my website:
-‣ User Authentication: Users can register and log in using their email or social login.
-‣ Dynamic Navbar: Displays different options based on user login status.
-‣ Search Functionality: Users can search posts based on tags.
-‣ Tags Section: Displays all available tags for easy post searching.
-‣ Announcements: Shows announcements if any are available; displays announcement count on the notification icon.
-‣ Posts Display: Shows all posts with pagination, sorting by newest or by popularity (based on votes).
-‣ Post Details: Detailed post view with author info, comments, and share functionality using react-share.
-‣ Membership Page: Users can pay to become a member, allowing more than 5 posts and receiving a Gold badge.
-‣ User Dashboard: Private route with sections for My Profile, Add Post, and My Posts.
-‣ Profile Badges: Users receive a Bronze badge upon registration and a Gold badge upon becoming a member.
-‣ Post Management: Users can add new posts, view their posts, and delete them.
-‣ Comment Management: Users can view, report comments, and provide feedback on posts.
-‣ Admin Dashboard: Private route for admins to manage users, view reported comments, and make announcements.
-‣ Pagination: Implemented on all tables and post listings to handle large datasets.
-‣ JWT Authentication: Secure token-based authentication for login sessions.
+🔘Project Overview:
+The project is a forum application developed using the MERN stack (MongoDB, Express.js, React, Node.js). It allows users to engage in discussions, post content, and manage their profiles. Key features include authentication, post creation, tagging, voting, commenting, and administrative controls.
+
+Main Features:
+Authentication and Membership Management:
+  ➔Secure login via social media or email/password.
+  ➔Membership options for enhanced posting privileges.
+  ➔Profile management and user authentication using JWT.
+
+Dynamic Content Display:
+  ➔Dynamic homepage with navigation based on user login status.
+  ➔Search functionality based on tags for posts.
+  ➔Sorting posts by popularity and pagination for ease of navigation.
+
+User and Admin Dashboards:
+  ➔User dashboard for profile management, post creation, and viewing personal posts.
+  ➔Admin dashboard for user management, handling reported content, and making announcements.
+  ➔Administrative controls ensure smooth moderation and community management.
+
+Technologies Used:
+✅Frontend: React, React Router, Bootstrap (for UI components).
+✅Backend: Node.js, Express.js, MongoDB (for data storage).
+✅Authentication: JWT (JSON Web Tokens) for secure user sessions.
+✅Other Tools: React-Hook-Form for form handling, react-share for social sharing, and optional tools like react-select for tag selection.
+
+
+Steps to Clone and Run the Project Locally:
+
+1. Clone the repository
+2. Navigate to the project directory
+3. Install dependencies
+4. Start the development server
+5. Run the server at your server.
+
+
+
+
+
